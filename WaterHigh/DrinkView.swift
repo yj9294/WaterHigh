@@ -123,7 +123,7 @@ struct DrinkView: View {
             }.fullScreenCover(item: $store.scope(state: \.goalState, action: \.goalAction)) { store in
                 GoalView(store: store)
             }.onAppear{
-                Task { @MainActor
+                Task { @MainActor in
                     try await Task.sleep(nanoseconds: 4_000_000_000)
                     ATTrackingManager.requestTrackingAuthorization { _ in
                     }
