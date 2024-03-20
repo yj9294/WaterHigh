@@ -28,6 +28,12 @@
 		BFAB7B472B8F072300BC9609 /* PrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAB7B462B8F072300BC9609 /* PrivacyView.swift */; };
 		BFAB7B492B8F072A00BC9609 /* TipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAB7B482B8F072A00BC9609 /* TipsView.swift */; };
 		BFAB7B4B2B8F250A00BC9609 /* NotificationUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAB7B4A2B8F250A00BC9609 /* NotificationUtil.swift */; };
+		BFE2914A2BA95C5500B90F33 /* FacebookAEM in Frameworks */ = {isa = PBXBuildFile; productRef = BFE291492BA95C5500B90F33 /* FacebookAEM */; };
+		BFE2914C2BA95C5500B90F33 /* FacebookBasics in Frameworks */ = {isa = PBXBuildFile; productRef = BFE2914B2BA95C5500B90F33 /* FacebookBasics */; };
+		BFE2914E2BA95C5500B90F33 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = BFE2914D2BA95C5500B90F33 /* FacebookCore */; };
+		BFE291512BA95DDE00B90F33 /* GADUtil in Frameworks */ = {isa = PBXBuildFile; productRef = BFE291502BA95DDE00B90F33 /* GADUtil */; };
+		BFE2915A2BA9ADE900B90F33 /* GADConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = BFE291592BA9ADE900B90F33 /* GADConfig.json */; };
+		BFE2915C2BA9C05300B90F33 /* GADNativeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE2915B2BA9C05300B90F33 /* GADNativeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +60,8 @@
 		BFAB7B4A2B8F250A00BC9609 /* NotificationUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationUtil.swift; sourceTree = "<group>"; };
 		BFAB7B4C2B8F25A200BC9609 /* WaterHigh.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WaterHigh.entitlements; sourceTree = "<group>"; };
 		BFAB7B4D2B8F30C100BC9609 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		BFE291592BA9ADE900B90F33 /* GADConfig.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GADConfig.json; sourceTree = "<group>"; };
+		BFE2915B2BA9C05300B90F33 /* GADNativeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GADNativeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +69,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFE2914C2BA95C5500B90F33 /* FacebookBasics in Frameworks */,
+				BFE291512BA95DDE00B90F33 /* GADUtil in Frameworks */,
+				BFE2914A2BA95C5500B90F33 /* FacebookAEM in Frameworks */,
 				BFA72A722B8C570A006AC203 /* ComposableArchitecture in Frameworks */,
+				BFE2914E2BA95C5500B90F33 /* FacebookCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +99,8 @@
 		BFA72A612B8C5665006AC203 /* WaterHigh */ = {
 			isa = PBXGroup;
 			children = (
+				BFE291592BA9ADE900B90F33 /* GADConfig.json */,
+				BFE2915B2BA9C05300B90F33 /* GADNativeView.swift */,
 				BFAB7B4D2B8F30C100BC9609 /* Info.plist */,
 				BFAB7B4C2B8F25A200BC9609 /* WaterHigh.entitlements */,
 				BFA72A622B8C5665006AC203 /* WaterHighApp.swift */,
@@ -139,6 +153,10 @@
 			name = WaterHigh;
 			packageProductDependencies = (
 				BFA72A712B8C570A006AC203 /* ComposableArchitecture */,
+				BFE291492BA95C5500B90F33 /* FacebookAEM */,
+				BFE2914B2BA95C5500B90F33 /* FacebookBasics */,
+				BFE2914D2BA95C5500B90F33 /* FacebookCore */,
+				BFE291502BA95DDE00B90F33 /* GADUtil */,
 			);
 			productName = WaterHigh;
 			productReference = BFA72A5F2B8C5665006AC203 /* WaterHigh.app */;
@@ -170,6 +188,8 @@
 			mainGroup = BFA72A562B8C5665006AC203;
 			packageReferences = (
 				BFA72A702B8C570A006AC203 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				BFE291482BA95C5500B90F33 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
+				BFE2914F2BA95DDD00B90F33 /* XCRemoteSwiftPackageReference "gadutil" */,
 			);
 			productRefGroup = BFA72A602B8C5665006AC203 /* Products */;
 			projectDirPath = "";
@@ -186,6 +206,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BFA72A6A2B8C5666006AC203 /* Preview Assets.xcassets in Resources */,
+				BFE2915A2BA9ADE900B90F33 /* GADConfig.json in Resources */,
 				BFA72A672B8C5666006AC203 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -211,6 +232,7 @@
 				BFAB7B332B8C73F300BC9609 /* DrinkView.swift in Sources */,
 				BFAB7B452B8F071C00BC9609 /* ReminderView.swift in Sources */,
 				BFAB7B412B8C9D3800BC9609 /* GoalView.swift in Sources */,
+				BFE2915C2BA9C05300B90F33 /* GADNativeView.swift in Sources */,
 				BFAB7B4B2B8F250A00BC9609 /* NotificationUtil.swift in Sources */,
 				BFA72A632B8C5665006AC203 /* WaterHighApp.swift in Sources */,
 				BFAB7B492B8F072A00BC9609 /* TipsView.swift in Sources */,
@@ -346,6 +368,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = WaterHigh/WaterHigh.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WaterHigh/Preview Content\"";
@@ -384,6 +407,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = WaterHigh/WaterHigh.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"WaterHigh/Preview Content\"";
@@ -448,6 +472,22 @@
 				minimumVersion = 1.8.2;
 			};
 		};
+		BFE291482BA95C5500B90F33 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 14.1.0;
+			};
+		};
+		BFE2914F2BA95DDD00B90F33 /* XCRemoteSwiftPackageReference "gadutil" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yj9294/gadutil.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -455,6 +495,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = BFA72A702B8C570A006AC203 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
+		};
+		BFE291492BA95C5500B90F33 /* FacebookAEM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BFE291482BA95C5500B90F33 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookAEM;
+		};
+		BFE2914B2BA95C5500B90F33 /* FacebookBasics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BFE291482BA95C5500B90F33 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookBasics;
+		};
+		BFE2914D2BA95C5500B90F33 /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BFE291482BA95C5500B90F33 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
+		};
+		BFE291502BA95DDE00B90F33 /* GADUtil */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BFE2914F2BA95DDD00B90F33 /* XCRemoteSwiftPackageReference "gadutil" */;
+			productName = GADUtil;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

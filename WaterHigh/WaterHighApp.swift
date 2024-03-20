@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import GADUtil
+import FacebookCore
 import ComposableArchitecture
 
 @main
@@ -27,7 +29,27 @@ struct WaterHighApp: App {
                     CacheUtil.getReminders().forEach({NotificationHelper.shared.appendReminder($0.title)})
                 }
             }
+            ApplicationDelegate.shared.application(
+                application,
+                didFinishLaunchingWithOptions: launchOptions
+            )
+            GADUtil.share.requestConfig()
             return true
         }
+        
+        func application(
+                _ app: UIApplication,
+                open url: URL,
+                options: [UIApplication.OpenURLOptionsKey : Any] = [:]
+            ) -> Bool {
+                ApplicationDelegate.shared.application(
+                    app,
+                    open: url,
+                    sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
+                    annotation: options[UIApplication.OpenURLOptionsKey.annotation]
+                )
+            }
     }
+    
+    
 }

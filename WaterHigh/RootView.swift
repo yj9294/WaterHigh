@@ -35,7 +35,9 @@ struct Root {
                 state.updateState(item)
             }
             if case .loadingAction(.launched) = action {
-                state.updateState(.home)
+                if state.loadingState.progress == 1.0 {
+                    state.updateState(.home)
+                }
             }
             return .none
         }
@@ -60,7 +62,22 @@ struct RootView: View {
         }.onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification), perform: { _ in
             store.send(.updateState(.loading))
             store.send(.loadingAction(.startLoading))
+            dismiss()
         })
+    }
+    
+    func dismiss() {
+        if let vc = (UIApplication.shared.connectedScenes.filter({$0 is UIWindowScene}).first as? UIWindowScene)?.keyWindow?.rootViewController {
+            if let presentedVC = vc.presentedViewController {
+                if let ppresentedVC = presentedVC.presentedViewController {
+                    ppresentedVC.dismiss(animated: true) {
+                        presentedVC.dismiss(animated: true)
+                    }
+                } else {
+                    presentedVC.dismiss(animated: true)
+                }
+            }
+        }
     }
 }
 

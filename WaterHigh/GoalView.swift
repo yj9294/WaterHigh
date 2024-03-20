@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import GADUtil
 import ComposableArchitecture
 
 @Reducer
@@ -42,6 +43,8 @@ struct Goal {
     var body: some Reducer<State, Action> {
         Reduce{ state, action in
             if case .dismiss = action {
+                GADUtil.share.disappear(.native)
+                GADUtil.share.load(.native)
                 return .run { _ in
                     await dismiss()
                 }

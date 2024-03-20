@@ -13,6 +13,7 @@ import SwiftUI
 struct Reminder {
     @ObservableState
     struct State: Equatable {
+        var ad: GADNativeViewModel = .none
         var showAddView = false
         var reminders: [ReminderModel] = CacheUtil.getReminders()
         var week: Bool = CacheUtil.getWeekMode()
@@ -27,6 +28,9 @@ struct Reminder {
             NotificationHelper.shared.deleteNotifications(reminder.title)
         }
         mutating func addReminder(_ reminder: ReminderModel) {
+            if self.reminders.contains(reminder) {
+                return
+            }
             self.reminders.append(reminder)
             self.reminders = self.reminders.sorted(by: { l1, l2 in
                 l1.title < l2.title
@@ -92,6 +96,11 @@ struct ReminderView: View {
                     }
                 }
                 Spacer()
+                HStack{
+                    WithPerceptionTracking {
+                        GADNativeView(model: store.ad)
+                    }
+                }.padding(.horizontal, 20).frame(height: 116)
             }
             WithPerceptionTracking {
                 if store.showAddView {
@@ -154,8 +163,9 @@ struct ReminderView: View {
     
     struct _PickerView: View {
         @State private var hour: String = "00"
-        let hours = Array(0...24)
         @State private var min: String = "00"
+
+        let hours = Array(0..<24)
         let mins = Array(0...59)
         let dismiss: ()->Void
         let add: (Int, Int)->Void
@@ -189,14 +199,16 @@ struct ReminderView: View {
                             VStack{
                                 Picker("", selection: $hour) {
                                     ForEach(hours, id: \.self) { hour in
-                                        Text(String(format: "%02d", hour)).frame(height: 50)
+                                        let value = String(format: "%02d", hour)
+                                        Text(value).frame(height: 50).tag(value)
                                     }
                                 }
                             }.pickerStyle(.wheel).frame(height: 150)
                             VStack{
                                 Picker("", selection: $min) {
                                     ForEach(mins, id: \.self) { hour in
-                                        Text(String(format: "%02d", hour)).frame(height: 50)
+                                        let value = String(format: "%02d", hour)
+                                        Text(value).frame(height: 50).tag(value)
                                     }
                                 }
                             }.pickerStyle(.wheel).frame(height: 150)

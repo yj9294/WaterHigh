@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import ComposableArchitecture
+import GADUtil
 
 enum HomeItem: String, CaseIterable, Hashable {
     case drink, charts, reward, profile
@@ -31,6 +32,7 @@ struct Home {
     
     @ObservableState
     struct State: Equatable {
+        
         var item: HomeItem = .drink
         var drinkState: Drink.State = .init()
         var chartsState: Charts.State = .init()
@@ -49,6 +51,38 @@ struct Home {
         mutating func updateGoal() {
             drinkState.goal = CacheUtil.getGoal()
         }
+        
+        var drinkImpressionDate: Date = CacheUtil.getImpressionDate(.drink)
+        var chartsImpressionDate: Date = CacheUtil.getImpressionDate(.charts)
+        var reminderImpressionDate: Date = CacheUtil.getImpressionDate(.profile)
+        mutating func updateADModel(_ ad: GADNativeViewModel) {
+            if item == .drink, ad != .none {
+                if Date().timeIntervalSince1970 - drinkImpressionDate .timeIntervalSince1970 > 10 {
+                    drinkState.ad = ad
+                    drinkImpressionDate = Date()
+                } else {
+                    debugPrint("[AD] drink 原生广告10s间隔限制")
+                }
+            } else if item == .charts, ad != .none {
+                if Date().timeIntervalSince1970 - chartsImpressionDate.timeIntervalSince1970 > 10 {
+                    chartsState.ad = ad
+                    chartsImpressionDate = Date()
+                } else {
+                    debugPrint("[AD] charts 原生广告10s间隔限制")
+                }
+            } else if item == .profile, ad != .none {
+                if Date().timeIntervalSince1970 - reminderImpressionDate.timeIntervalSince1970 > 10 {
+                    profileState.reminderState?.ad = ad
+                    reminderImpressionDate = Date()
+                } else {
+                    debugPrint("[AD] reminder 原生广告10s间隔限制")
+                }
+            } else {
+                drinkState.ad = .none
+                chartsState.ad = .none
+                profileState.reminderState?.ad = .none
+            }
+        }
     }
     enum Action: BindableAction, Equatable {
         case binding(BindingAction<State>)
@@ -57,6 +91,7 @@ struct Home {
         case chartsAction(Charts.Action)
         case rewardAction(Reward.Action)
         case profileAction(Profile.Action)
+        case updateAD(GADNativeViewModel)
     }
     
     var body: some Reducer<State, Action> {
@@ -71,6 +106,10 @@ struct Home {
             
             if case .drinkAction(.updateGoal) = action {
                 state.updateGoal()
+            }
+            
+            if case let .updateAD(ad) = action {
+                state.updateADModel(ad)
             }
             return .none
         }
@@ -107,6 +146,12 @@ struct HomeView: View {
                 ProfileView(store: store.scope(state: \.profileState, action: \.profileAction)).tabItem {
                     getTabbarItem(.profile, in: store.item)
                 }.tag(HomeItem.profile)
+            }).onReceive(NotificationCenter.default.publisher(for: .nativeUpdate), perform: { noti in
+                if let ad = noti.object as? GADNativeModel {
+                    store.send(.updateAD(GADNativeViewModel(model: ad)))
+                } else {
+                    store.send(.updateAD(.none))
+                }
             })
         }
     }

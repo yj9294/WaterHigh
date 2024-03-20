@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import GADUtil
 import ComposableArchitecture
 
 enum ChartsItem: String, CaseIterable{
@@ -20,6 +21,7 @@ enum ChartsItem: String, CaseIterable{
 struct Charts {
     @ObservableState
     struct State: Equatable {
+        var ad: GADNativeViewModel = .none
         var drinks: [DrinkModel] = CacheUtil.getDrinks()
         var item: ChartsItem = .day
         @Presents var historyState: History.State?
@@ -193,7 +195,15 @@ struct ChartsView: View {
                     Spacer()
                 }.padding(.all, 20)
                 Spacer()
-            }.fullScreenCover(item: $store.scope(state: \.historyState, action: \.historyAction)) { store in
+                HStack{
+                    WithPerceptionTracking {
+                        GADNativeView(model: store.ad)
+                    }
+                }.padding(.horizontal, 20).frame(height: 116)
+            }.onAppear(perform: {
+                GADUtil.share.disappear(.native)
+                GADUtil.share.load(.native)
+            }).fullScreenCover(item: $store.scope(state: \.historyState, action: \.historyAction)) { store in
                 HistoryView(store: store)
             }
         }

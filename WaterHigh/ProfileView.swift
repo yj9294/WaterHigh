@@ -7,6 +7,7 @@
 
 import Foundation
 import ComposableArchitecture
+import GADUtil
 import SwiftUI
 
 protocol ProfileItem {
@@ -99,6 +100,8 @@ struct Profile {
         
         mutating func presentReminderView() {
             reminderState = .init()
+            GADUtil.share.disappear(.native)
+            GADUtil.share.load(.native)
         }
         
         mutating func presentPrivacyView() {

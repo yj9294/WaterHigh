@@ -8,19 +8,23 @@
 import Foundation
 import ComposableArchitecture
 import SwiftUI
+import GADUtil
+import Combine
 
 @Reducer
 struct Loading {
     @ObservableState
     struct State: Equatable {
         var progress = 0.5
-        var duration = 2.4
+        var duration = 12.4
     }
     enum Action: Equatable {
         case launched
         case startLoading
         case updateProgress
         case stopLoading
+        case showLoadingAD
+        case none
     }
     
     @Dependency(\.continuousClock) var clock
@@ -30,7 +34,10 @@ struct Loading {
         Reduce{ state, action in
             if case .startLoading = action {
                 state.progress = 0.0
-                state.duration = 2.4
+                state.duration = 12.4
+                GADUtil.share.load(.open)
+                GADUtil.share.load(.interstitial)
+                GADUtil.share.load(.native)
                 return .run { send in
                     for await _ in clock.timer(interval: .milliseconds(20)) {
                         await send(.updateProgress)
@@ -39,12 +46,23 @@ struct Loading {
             }
             if case .updateProgress = action {
                 state.progress += (0.02 / state.duration)
-                if state.progress >= 1.0 {
+                if state.progress > 1.0 {
                     state.progress = 1.0
-                    return .run { send in
-                        await send(.stopLoading)
-                        await send(.launched)
+                    let stop = Future<Action, Never> { promise in
+                        promise(.success(.stopLoading))
                     }
+                    let publisher = Future<Action, Never> { promise in
+                        GADUtil.share.show(.open) { _ in
+                            promise(.success(.launched))
+                        }
+                    }
+                    return .publisher {
+                        publisher.merge(with: stop)
+                    }
+                }
+
+                if state.progress > 0.3, GADUtil.share.isLoaded(.open) {
+                    state.progress = 1.0
                 }
             }
             if case .stopLoading = action {

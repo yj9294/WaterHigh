@@ -7,6 +7,8 @@
 
 import Foundation
 import SwiftUI
+import GADUtil
+import Combine
 import ComposableArchitecture
 import AppTrackingTransparency
 
@@ -14,6 +16,7 @@ import AppTrackingTransparency
 struct Drink {
     @ObservableState
     struct State: Equatable {
+        var ad: GADNativeViewModel = .none
         var goal: Int = CacheUtil.getGoal()
         var drinks: [DrinkModel] = CacheUtil.getDrinks()
         @Presents var recordState: Record.State?
@@ -46,6 +49,8 @@ struct Drink {
         
         case updateDrinks
         case updateGoal
+        
+        case showInterAD
     }
     
     var body: some Reducer<State, Action> {
@@ -66,6 +71,17 @@ struct Drink {
                 state.refreshGoal()
                 return .run { send in
                     await send(.updateGoal)
+                }
+            }
+            if case .showInterAD = action {
+                let publisher = Future<Action, Never> { promise in
+                    GADUtil.share.load(.interstitial)
+                    GADUtil.share.show(.interstitial) { _ in
+                        promise(.success(.presentGoalView))
+                    }
+                }
+                return .publisher {
+                    publisher
                 }
             }
             return .none
@@ -96,7 +112,7 @@ struct DrinkView: View {
                                 Text("%").padding(.bottom, 10)
                             }.padding(.horizontal, 16).padding(.vertical, 2).background(Image("drink_button_1").resizable())
                             Button(action: {
-                                store.send(.presentGoalView)
+                                store.send(.showInterAD)
                             }, label: {
                                 HStack{
                                     WithPerceptionTracking {
@@ -118,7 +134,15 @@ struct DrinkView: View {
                     }.padding(.bottom, 40).padding(.leading, 20).padding(.top, 20)
                 }.background(Color(uiColor: UIColor(hex: 0xE6FAFF)))
                 Spacer()
-            }.fullScreenCover(item: $store.scope(state: \.recordState, action: \.recordAction)) { store in
+                HStack{
+                    WithPerceptionTracking {
+                        GADNativeView(model: store.ad)
+                    }
+                }.padding(.horizontal, 20).frame(height: 116)
+            }.onAppear(perform: {
+                GADUtil.share.disappear(.native)
+                GADUtil.share.load(.native)
+            }).fullScreenCover(item: $store.scope(state: \.recordState, action: \.recordAction)) { store in
                 RecordView(store: store)
             }.fullScreenCover(item: $store.scope(state: \.goalState, action: \.goalAction)) { store in
                 GoalView(store: store)

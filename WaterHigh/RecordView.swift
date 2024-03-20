@@ -8,6 +8,8 @@
 import Foundation
 import ComposableArchitecture
 import SwiftUI
+import GADUtil
+import Combine
 
 enum RecordItem: String, Codable, CaseIterable {
     case water, drinks, milk, coffee, tea, custom
@@ -47,6 +49,7 @@ struct Record {
         case dismiss
         case updateItem(RecordItem)
         case saveButtonTapped
+        case showInterAD
     }
     
     @Dependency(\.dismiss) var dismiss
@@ -54,6 +57,8 @@ struct Record {
         BindingReducer()
         Reduce{ state, action in
             if case .dismiss = action {
+                GADUtil.share.disappear(.native)
+                GADUtil.share.load(.native)
                 return .run { _ in
                     await dismiss()
                 }
@@ -63,8 +68,19 @@ struct Record {
             }
             if case .saveButtonTapped = action {
                 state.updateDrinks()
-                return .run { _ in
-                    await dismiss()
+                return .run { send in
+                    await send(.showInterAD)
+                }
+            }
+            if case .showInterAD = action {
+                let publisher = Future<Action, Never> { promise in
+                    GADUtil.share.load(.interstitial)
+                    GADUtil.share.show(.interstitial) { _ in
+                        promise(.success(.dismiss))
+                    }
+                }
+                return .publisher {
+                    publisher
                 }
             }
             return .none

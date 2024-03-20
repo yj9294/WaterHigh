@@ -1,0 +1,33 @@
+{
+    "showTimes":30,
+    "clickTimes":5,
+    "ads": [
+        {
+            "key": "open",
+            "value": [
+                {
+                    "theAdPriority":1,
+                    "theAdID":"ca-app-pub-5523449995743125/6132102347"
+                }
+            ]
+        },
+        {
+            "key": "interstitial",
+            "value": [
+                {
+                    "theAdPriority":1,
+                    "theAdID":"ca-app-pub-5523449995743125/2427008663"
+                }
+            ]
+        },
+        {
+            "key": "native",
+            "value": [
+                {
+                    "theAdPriority":1,
+                    "theAdID":"ca-app-pub-5523449995743125/2783884271"
+                }
+            ]
+        }
+    ]
+}
